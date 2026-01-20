@@ -193,3 +193,29 @@ export const TYPOGRAPHY = {
     letterSpacing: 0,
     verticalAlign: 'middle',
 } as const;
+
+/**
+ * Animation state transition data model
+ */
+export interface AnimationStateTransition {
+    fromState: number;
+    toState: number;
+    duration: number;
+    trigger: 'hover' | 'mousedown' | 'click' | 'auto';
+}
+
+/**
+ * Checkbox animation state transitions
+ */
+export const ANIMATION_TRANSITIONS: AnimationStateTransition[] = [
+    { fromState: 1, toState: 2, duration: 150, trigger: 'hover' },
+    { fromState: 2, toState: 1, duration: 150, trigger: 'hover' },
+    { fromState: 2, toState: 3, duration: 100, trigger: 'mousedown' },
+    { fromState: 3, toState: 4, duration: 0, trigger: 'click' },      // Instant
+    { fromState: 4, toState: 5, duration: 150, trigger: 'auto' },
+    { fromState: 5, toState: 6, duration: 100, trigger: 'click' },
+    { fromState: 6, toState: 7, duration: 100, trigger: 'auto' },
+    { fromState: 7, toState: 8, duration: 100, trigger: 'auto' },
+    { fromState: 8, toState: 9, duration: 100, trigger: 'auto' },
+    { fromState: 9, toState: 1, duration: 0, trigger: 'auto' },       // Instant
+];

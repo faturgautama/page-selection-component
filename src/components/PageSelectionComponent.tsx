@@ -1,4 +1,5 @@
 import React from 'react';
+import MainWrapper from './MainWrapper';
 
 /**
  * Root component for the page selection interface
@@ -6,9 +7,11 @@ import React from 'react';
  */
 const PageSelectionComponent: React.FC = () => {
   return (
-    <div>
-      {/* Component implementation will be added in subsequent tasks */}
-    </div>
+    <MainWrapper>
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        MainWrapper Component Test
+      </div>
+    </MainWrapper>
   );
 };
 

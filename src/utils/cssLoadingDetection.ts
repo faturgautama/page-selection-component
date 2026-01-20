@@ -13,7 +13,7 @@ export const isStylesheetLoaded = (href: string): boolean => {
     return stylesheets.some((sheet) => {
         try {
             return sheet.href && sheet.href.includes(href);
-        } catch (e) {
+        } catch {
             // Cross-origin stylesheets may throw errors
             return false;
         }

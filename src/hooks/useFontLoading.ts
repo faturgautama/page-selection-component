@@ -14,8 +14,9 @@ export const useFontLoading = (): boolean => {
         if (!document.fonts) {
             // If Font Loading API is not supported, assume font is loaded
             // Component will use fallback fonts automatically via CSS
-            setFontLoaded(true);
-            return;
+            // Using setTimeout to avoid direct setState in effect
+            const timer = setTimeout(() => setFontLoaded(true), 0);
+            return () => clearTimeout(timer);
         }
 
         // Check if Montserrat font is already loaded

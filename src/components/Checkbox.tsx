@@ -41,13 +41,19 @@ const Checkbox: React.FC<CheckboxProps> = ({
     // Only sync if we're in a stable state (1 or 5) and not animating
     if (isAnimatingRef.current) return;
     
-    if (isChecked && (currentState === 1 || currentState === 2)) {
-      // If checked externally and in state 1 or 2, jump to state 5
-      setCurrentState(5);
-    } else if (!isChecked && currentState === 5) {
-      // If unchecked externally and in state 5, jump to state 1
-      setCurrentState(1);
-    }
+    // Use setTimeout to avoid direct setState in effect
+    const syncState = () => {
+      if (isChecked && (currentState === 1 || currentState === 2)) {
+        // If checked externally and in state 1 or 2, jump to state 5
+        setCurrentState(5);
+      } else if (!isChecked && currentState === 5) {
+        // If unchecked externally and in state 5, jump to state 1
+        setCurrentState(1);
+      }
+    };
+
+    const timer = setTimeout(syncState, 0);
+    return () => clearTimeout(timer);
   }, [isChecked, currentState]);
 
   const handleMouseEnter = () => {

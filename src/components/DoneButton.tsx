@@ -68,6 +68,7 @@ const DoneButton: React.FC<DoneButtonProps> = ({ onClick }) => {
     color: COLORS.textPrimary,
     backgroundColor: backgroundColor,
     border: 'none',
+    outline: 'none',
     cursor: 'pointer',
     transition: 'background-color 0.2s ease',
     display: 'flex',

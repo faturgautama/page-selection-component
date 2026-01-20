@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import MainWrapper from './MainWrapper';
 import DividerLine from './DividerLine';
 import HeaderSection from './HeaderSection';
@@ -30,7 +30,7 @@ const PageSelectionComponent: React.FC = () => {
   const [checkboxAnimationStates] = useState<Map<string, number>>(new Map());
 
   // State for button state (will be used in future tasks)
-  const [_buttonState] = useState<'normal' | 'hover' | 'active'>('normal');
+  // const [buttonState] = useState<'normal' | 'hover' | 'active'>('normal');
 
   // Derived state for allPagesSelected - automatically calculated from pageSelections
   // This ensures the "All pages" checkbox state is always consistent with individual selections
@@ -42,24 +42,31 @@ const PageSelectionComponent: React.FC = () => {
    * Handles "All pages" checkbox change
    * When checked: sets all 6 page checkboxes to true
    * When unchecked: sets all 6 page checkboxes to false
+   * Uses React's batching to ensure atomic state updates
    */
-  const handleAllPagesCheckboxChange = () => {
-    const newState = !allPagesSelected;
-    // Set all pages to the new state
-    setPageSelections([newState, newState, newState, newState, newState, newState]);
-  };
+  const handleAllPagesCheckboxChange = useCallback(() => {
+    setPageSelections(prevSelections => {
+      const newState = !prevSelections.every(selected => selected);
+      return [newState, newState, newState, newState, newState, newState];
+    });
+  }, []);
 
   /**
    * Handles individual page checkbox change
    * Toggles the checkbox at the specified index
    * The allPagesSelected state is automatically updated via useMemo
+   * Multiple simultaneous calls are handled correctly due to functional state updates
    */
-  const handlePageCheckboxChange = (pageIndex: number) => {
-    const newSelections = [...pageSelections];
-    newSelections[pageIndex] = !newSelections[pageIndex];
-    setPageSelections(newSelections);
+  const handlePageCheckboxChange = useCallback((pageIndex: number) => {
+    // Use functional update to ensure we're working with the latest state
+    // This protects against race conditions when multiple checkboxes are clicked rapidly
+    setPageSelections(prevSelections => {
+      const newSelections = [...prevSelections];
+      newSelections[pageIndex] = !newSelections[pageIndex];
+      return newSelections;
+    });
     // Note: updateAllPagesState() is not needed as allPagesSelected is derived via useMemo
-  };
+  }, []);
 
   /**
    * Handles Done button click

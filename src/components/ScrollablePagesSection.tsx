@@ -14,8 +14,7 @@ interface ScrollablePagesSectionProps {
  */
 const ScrollablePagesSection: React.FC<ScrollablePagesSectionProps> = ({ 
   pageSelections, 
-  onPageCheckboxChange, 
-  checkboxAnimationStates: _checkboxAnimationStates 
+  onPageCheckboxChange
 }) => {
   const containerStyle: React.CSSProperties = {
     maxHeight: `${DIMENSIONS.scrollableSection.maxHeight}px`,

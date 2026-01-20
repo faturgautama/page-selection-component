@@ -18,6 +18,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
 }) => {
   const [currentState, setCurrentState] = useState<number>(1);
   const animationTimeoutRef = useRef<number | null>(null);
+  const isAnimatingRef = useRef<boolean>(false);
+  const pendingClickRef = useRef<boolean>(false);
 
   // Clear timeout on unmount
   useEffect(() => {
@@ -29,9 +31,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
   }, []);
 
   // Handle state transitions based on isChecked prop
+  // This syncs external state changes (e.g., from "All pages" checkbox)
   useEffect(() => {
-    if (isChecked && currentState === 1) {
-      // If checked externally and in state 1, jump to state 5
+    // Only sync if we're in a stable state (1 or 5) and not animating
+    if (isAnimatingRef.current) return;
+    
+    if (isChecked && (currentState === 1 || currentState === 2)) {
+      // If checked externally and in state 1 or 2, jump to state 5
       setCurrentState(5);
     } else if (!isChecked && currentState === 5) {
       // If unchecked externally and in state 5, jump to state 1
@@ -58,20 +64,47 @@ const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   const handleClick = () => {
-    if (currentState === 3 || currentState === 2) {
-      // Checking sequence: State 3 → 4 → 5
-      setCurrentState(4);
+    // Rapid click protection: ignore clicks during animation
+    if (isAnimatingRef.current) {
+      pendingClickRef.current = true;
+      return;
+    }
+
+    // Determine if we're checking or unchecking based on current state
+    const isCurrentlyChecked = currentState === 5;
+    
+    if (!isCurrentlyChecked) {
+      // Checking sequence: Any state → 3 → 4 → 5
+      isAnimatingRef.current = true;
       
-      // Instant transition to state 4, then to state 5 after brief delay
+      // Go to state 3 first (pre-click)
+      setCurrentState(3);
+      
+      // Clear any existing timeout
       if (animationTimeoutRef.current) {
         clearTimeout(animationTimeoutRef.current);
       }
+      
+      // Then immediately to state 4 (transition)
       animationTimeoutRef.current = setTimeout(() => {
-        setCurrentState(5);
-        onChange(); // Notify parent of checked state
-      }, 150);
-    } else if (currentState === 5) {
+        setCurrentState(4);
+        
+        // Then to state 5 (checked) after brief delay
+        animationTimeoutRef.current = setTimeout(() => {
+          setCurrentState(5);
+          onChange(); // Notify parent of checked state
+          isAnimatingRef.current = false;
+          
+          // Process pending click if any
+          if (pendingClickRef.current) {
+            pendingClickRef.current = false;
+            setTimeout(() => handleClick(), 0);
+          }
+        }, 150);
+      }, 0);
+    } else {
       // Unchecking sequence: State 5 → 6 → 7 → 8 → 9 → 1
+      isAnimatingRef.current = true;
       setCurrentState(6);
       
       if (animationTimeoutRef.current) {
@@ -94,6 +127,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
             animationTimeoutRef.current = setTimeout(() => {
               setCurrentState(1);
               onChange(); // Notify parent of unchecked state
+              isAnimatingRef.current = false;
+              
+              // Process pending click if any
+              if (pendingClickRef.current) {
+                pendingClickRef.current = false;
+                setTimeout(() => handleClick(), 0);
+              }
             }, 0);
           }, 100);
         }, 100);

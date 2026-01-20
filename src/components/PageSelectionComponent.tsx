@@ -1,5 +1,6 @@
 import React from 'react';
 import MainWrapper from './MainWrapper';
+import DividerLine from './DividerLine';
 
 /**
  * Root component for the page selection interface
@@ -11,6 +12,11 @@ const PageSelectionComponent: React.FC = () => {
       <div style={{ padding: '20px', textAlign: 'center' }}>
         MainWrapper Component Test
       </div>
+      <DividerLine />
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        DividerLine Component Test
+      </div>
+      <DividerLine />
     </MainWrapper>
   );
 };

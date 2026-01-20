@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MainWrapper from './MainWrapper';
 import DividerLine from './DividerLine';
 import HeaderSection from './HeaderSection';
+import PageItem from './PageItem';
 
 /**
  * Root component for the page selection interface
@@ -9,9 +10,14 @@ import HeaderSection from './HeaderSection';
  */
 const PageSelectionComponent: React.FC = () => {
   const [allPagesSelected, setAllPagesSelected] = useState(false);
+  const [page1Selected, setPage1Selected] = useState(false);
 
   const handleAllPagesCheckboxChange = () => {
     setAllPagesSelected(!allPagesSelected);
+  };
+
+  const handlePage1CheckboxChange = () => {
+    setPage1Selected(!page1Selected);
   };
 
   return (
@@ -21,9 +27,11 @@ const PageSelectionComponent: React.FC = () => {
         onCheckboxChange={handleAllPagesCheckboxChange}
       />
       <DividerLine />
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        DividerLine Component Test
-      </div>
+      <PageItem
+        pageNumber={1}
+        isChecked={page1Selected}
+        onChange={handlePage1CheckboxChange}
+      />
       <DividerLine />
     </MainWrapper>
   );

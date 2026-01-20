@@ -40,10 +40,10 @@ export interface ComponentDimensions {
     };
 
     pageItem: {
-        paddingTop: 10;
+        paddingTop: 8;
         paddingRight: 15;
-        paddingBottom: 10;
-        paddingLeft: 15;
+        paddingBottom: 8;
+        paddingLeft: 22;
     };
 
     doneButton: {
@@ -57,7 +57,7 @@ export interface ComponentDimensions {
     };
 
     scrollableSection: {
-        maxHeight: 160; // Shows 4 pages by default
+        maxHeight: 164; // Shows 4 pages by default
     };
 }
 
@@ -103,10 +103,10 @@ export const DIMENSIONS: ComponentDimensions = {
     },
 
     pageItem: {
-        paddingTop: 10,
+        paddingTop: 8,
         paddingRight: 15,
-        paddingBottom: 10,
-        paddingLeft: 15,
+        paddingBottom: 8,
+        paddingLeft: 22,
     },
 
     doneButton: {
@@ -120,7 +120,7 @@ export const DIMENSIONS: ComponentDimensions = {
     },
 
     scrollableSection: {
-        maxHeight: 160,
+        maxHeight: 164,
     },
 };
 

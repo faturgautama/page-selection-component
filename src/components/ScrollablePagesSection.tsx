@@ -1,4 +1,6 @@
 import React from 'react';
+import PageItem from './PageItem';
+import { DIMENSIONS } from '../constants';
 
 interface ScrollablePagesSectionProps {
   pageSelections: boolean[];
@@ -8,15 +10,29 @@ interface ScrollablePagesSectionProps {
 
 /**
  * Container for 6 page items with scroll functionality
+ * Shows 4 pages by default, requires scrolling to view pages 5-6
  */
 const ScrollablePagesSection: React.FC<ScrollablePagesSectionProps> = ({ 
   pageSelections, 
   onPageCheckboxChange, 
-  checkboxAnimationStates 
+  checkboxAnimationStates: _checkboxAnimationStates 
 }) => {
+  const containerStyle: React.CSSProperties = {
+    maxHeight: `${DIMENSIONS.scrollableSection.maxHeight}px`,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+  };
+
   return (
-    <div>
-      {/* Component implementation will be added in subsequent tasks */}
+    <div style={containerStyle}>
+      {[1, 2, 3, 4, 5, 6].map((pageNumber) => (
+        <PageItem
+          key={`page-${pageNumber}`}
+          pageNumber={pageNumber}
+          isChecked={pageSelections[pageNumber - 1] || false}
+          onChange={() => onPageCheckboxChange(pageNumber - 1)}
+        />
+      ))}
     </div>
   );
 };

@@ -117,7 +117,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         return {
           ...baseStyle,
           backgroundColor: COLORS.mainBackground,
-          border: 'none',
+          border: `1px solid ${COLORS.dividerBorder}`,
         };
       case 2: // Hover - Light
         return {
@@ -160,91 +160,49 @@ const Checkbox: React.FC<CheckboxProps> = ({
         return {
           ...baseStyle,
           backgroundColor: COLORS.mainBackground,
-          border: `1px solid ${COLORS.checkboxBorderLight}`,
+          border: `1px solid ${COLORS.dividerBorder}`,
         };
       case 9: // Return to Empty
         return {
           ...baseStyle,
           backgroundColor: COLORS.mainBackground,
-          border: 'none',
+          border: `1px solid ${COLORS.dividerBorder}`,
         };
       default:
         return baseStyle;
     }
   };
 
-  const getIconStyle = (): React.CSSProperties => {
-    const baseStyle: React.CSSProperties = {
-      width: `${DIMENSIONS.checkbox.iconWidth}px`,
-      height: `${DIMENSIONS.checkbox.iconHeight}px`,
-      position: 'absolute',
-      top: `${DIMENSIONS.checkbox.iconTop}px`,
-      left: `${DIMENSIONS.checkbox.iconLeft}px`,
-      boxSizing: 'border-box',
-    };
-
-    // Icon visibility and styling based on state
+  const getIconColor = (): string => {
     switch (currentState) {
       case 1: // Empty/Default - icon not visible
-        return {
-          ...baseStyle,
-          display: 'none',
-        };
+      case 9: // Return to Empty
+        return 'transparent';
       case 2: // Hover - Light
-        return {
-          ...baseStyle,
-          border: `1px solid ${COLORS.checkboxIconLight}`,
-          borderTop: 'none',
-          borderLeft: 'none',
-          transform: 'rotate(45deg)',
-          marginTop: '-2px',
-        };
+      case 8: // Fading
+        return COLORS.checkboxIconLight;
       case 3: // Pre-click
-        return {
-          ...baseStyle,
-          border: `1px solid ${COLORS.checkboxIconDark}`,
-          borderTop: 'none',
-          borderLeft: 'none',
-          transform: 'rotate(45deg)',
-          marginTop: '-2px',
-        };
+        return COLORS.checkboxIconDark;
       case 4: // Transition to Checked
       case 5: // Checked/Active
       case 6: // Transition to Unchecked
-        return {
-          ...baseStyle,
-          border: `1px solid ${COLORS.checkboxIconWhite}`,
-          borderTop: 'none',
-          borderLeft: 'none',
-          transform: 'rotate(45deg)',
-          marginTop: '-2px',
-        };
+        return COLORS.checkboxIconWhite;
       case 7: // Disappearing - fading effect
-        return {
-          ...baseStyle,
-          border: `1px solid ${COLORS.checkboxIconWhite}`,
-          borderTop: 'none',
-          borderLeft: 'none',
-          transform: 'rotate(45deg)',
-          marginTop: '-2px',
-          opacity: 0.5,
-        };
-      case 8: // Fading
-        return {
-          ...baseStyle,
-          border: `1px solid ${COLORS.checkboxIconLight}`,
-          borderTop: 'none',
-          borderLeft: 'none',
-          transform: 'rotate(45deg)',
-          marginTop: '-2px',
-        };
-      case 9: // Return to Empty
-        return {
-          ...baseStyle,
-          display: 'none',
-        };
+        return COLORS.checkboxIconWhite;
       default:
-        return baseStyle;
+        return 'transparent';
+    }
+  };
+
+  const getIconOpacity = (): number => {
+    switch (currentState) {
+      case 1: // Empty/Default - icon not visible
+      case 9: // Return to Empty
+        return 0;
+      case 7: // Disappearing - fading effect
+        return 0.5;
+      default:
+        return 1;
     }
   };
 
@@ -260,7 +218,27 @@ const Checkbox: React.FC<CheckboxProps> = ({
       aria-checked={isChecked}
       tabIndex={0}
     >
-      <div style={getIconStyle()} />
+      <svg
+        width={DIMENSIONS.checkbox.iconWidth}
+        height={DIMENSIONS.checkbox.iconHeight}
+        viewBox="0 0 17 12"
+        style={{
+          position: 'absolute',
+          top: `${DIMENSIONS.checkbox.iconTop}px`,
+          left: `${DIMENSIONS.checkbox.iconLeft}px`,
+          opacity: getIconOpacity(),
+          transition: 'opacity 150ms ease',
+        }}
+      >
+        <path
+          d="M1 6L6 11L16 1"
+          stroke={getIconColor()}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </div>
   );
 };

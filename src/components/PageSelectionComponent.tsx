@@ -3,6 +3,7 @@ import MainWrapper from './MainWrapper';
 import DividerLine from './DividerLine';
 import HeaderSection from './HeaderSection';
 import PageItem from './PageItem';
+import DoneButton from './DoneButton';
 
 /**
  * Root component for the page selection interface
@@ -20,6 +21,11 @@ const PageSelectionComponent: React.FC = () => {
     setPage1Selected(!page1Selected);
   };
 
+  const handleDoneButtonClick = () => {
+    console.log('Done button clicked');
+    // Future implementation: handle done action
+  };
+
   return (
     <MainWrapper>
       <HeaderSection
@@ -33,6 +39,7 @@ const PageSelectionComponent: React.FC = () => {
         onChange={handlePage1CheckboxChange}
       />
       <DividerLine />
+      <DoneButton onClick={handleDoneButtonClick} />
     </MainWrapper>
   );
 };

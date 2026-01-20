@@ -1,180 +1,105 @@
 # Page Selection Component
 
-## Project Overview
+A pixel-perfect implementation of a page selection component based on Figma design specifications.
 
-This component features a main wrapper containing a header with "All pages" checkbox, a scrollable list of 6 individual page checkboxes with 9-state animations, divider lines, and a "Done" button with 3 visual states. The implementation prioritizes exact dimensional accuracy, precise color matching, and smooth animation states.
+## Live Demo
+
+[View Live Demo](https://page-selection-component.vercel.app/)
+
+## Checklist Implementation
+
+- [x] All 8 checkbox states are implemented
+- [x] All button states are implemented
+- [x] Component size exactly matches the example
+- [x] Button size exactly matches the example
+- [x] Checkbox shape exactly matches the example
+- [x] Page scrolling works (6 pages total, 4 visible by default)
+- [x] All colors exactly match the example
+- [x] All indents between elements exactly match the example
+- [x] If all pages are selected, the "All pages" checkbox is selected automatically
 
 ## Technology Stack
 
-- **React 19.2.0** - UI library
-- **TypeScript 5.9.3** - Type safety and development experience
-- **Vite 7.2.4** - Build tool and development server
-- **Vitest 4.0.17** - Unit testing framework
-- **Testing Library** - Component testing utilities
-- **ESLint** - Code linting and quality
+- React 19.2.0
+- TypeScript 5.9.3
+- Vite 7.2.4
 
 ## Project Structure
 
 ```
-page-selection-component/
-├── src/
-│   ├── components/                                 # React components
-│   │   ├── __tests__/                              # Component unit tests
-│   │   │   ├── Checkbox.test.tsx
-│   │   │   ├── DoneButton.test.tsx
-│   │   │   ├── DividerLine.test.tsx
-│   │   │   ├── ErrorHandling.test.tsx
-│   │   │   ├── HeaderSection.test.tsx
-│   │   │   ├── MainWrapper.test.tsx
-│   │   │   ├── PageItem.test.tsx
-│   │   │   ├── PageSelectionComponent.test.tsx
-│   │   │   └── ScrollablePagesSection.test.tsx
-│   │   ├── Checkbox.tsx                            # Checkbox with 9 animation states
-│   │   ├── DividerLine.tsx                         # Visual separator component
-│   │   ├── DoneButton.tsx                          # Action button with 3 states
-│   │   ├── ErrorBoundary.tsx                       # Error handling wrapper
-│   │   ├── HeaderSection.tsx                       # "All pages" header section
-│   │   ├── MainWrapper.tsx                         # Outer container component
-│   │   ├── PageItem.tsx                            # Individual page row component
-│   │   ├── PageSelectionComponent.tsx              # Root component
-│   │   └── ScrollablePagesSection.tsx              # Scrollable pages container
-│   ├── hooks/                                      # Custom React hooks
-│   │   ├── __tests__/                              # Hook unit tests
-│   │   │   └── useFontLoading.test.tsx
-│   │   └── useFontLoading.ts                       # Font loading detection hook
-│   ├── test/                                       # Test utilities and setup
-│   │   ├── helpers.ts                              # Test helper functions
-│   │   ├── setup.ts                                # Test environment setup
-│   │   └── vitest.d.ts                             # Vitest type definitions
-│   ├── utils/                                      # Utility functions
-│   │   └── cssLoadingDetection.ts                  # CSS loading detection utilities
-│   ├── App.css                                     # Application styles
-│   ├── App.tsx                                     # Main application component
-│   ├── constants.ts                                # Centralized constants (dimensions, colors, typography)
-│   ├── index.css                                   # Global styles
-│   └── main.tsx                                    # Application entry point
+src/
+├── components/
+│   ├── Checkbox.tsx              # Checkbox with 8 animation states
+│   ├── DividerLine.tsx           # Visual separator
+│   ├── DoneButton.tsx            # Action button with 3 states
+│   ├── HeaderSection.tsx         # "All pages" header
+│   ├── MainWrapper.tsx           # Main container
+│   ├── PageItem.tsx              # Individual page row
+│   ├── PageSelectionComponent.tsx # Root component
+│   └── ScrollablePagesSection.tsx # Scrollable pages container
+├── constants.ts                   # Dimensions, colors, typography
+├── App.tsx                        # Main app component
+└── main.tsx                       # Entry point
 ```
 
-## Component Architecture
+## Component Features
 
-### Core Components
+### Checkbox States (8 states)
 
-**PageSelectionComponent** - Root component managing global state
-- Manages individual page selections (array of 6 booleans)
-- Derives "All pages" checkbox state automatically
-- Handles checkbox animation states
-- Coordinates all child components
+1. Empty/Default
+2. Hover - Light
+3. Pre-click
+4. Transition to Checked
+5. Checked/Active
+6. Transition to Unchecked
+7. Disappearing
+8. Fading (returns to State 1)
 
-**MainWrapper** - Outer container (370×326px)
-- Provides border, shadow, and padding
-- Ensures pixel-perfect dimensions
-- Uses inline styles for CSS fallback resilience
+### Button States (3 states)
 
-**HeaderSection** - "All pages" section
-- Displays master checkbox label
-- Controls all 6 page checkboxes simultaneously
-- Applies exact padding and typography
+1. Normal (background #FFCE22)
+2. Hover/Active (background #FFD84D)
+3. After Click (returns to Normal)
 
-**Checkbox** - Interactive checkbox with 9 animation states
-- State 1: Empty/Default
-- State 2: Hover - Light
-- State 3: Pre-click
-- State 4: Transition to Checked
-- State 5: Checked/Active
-- State 6: Transition to Unchecked
-- State 7: Disappearing
-- State 8: Fading
-- State 9: Return to Empty
-
-**ScrollablePagesSection** - Scrollable container
-- Displays 6 page items (Page 1-6)
-- Shows 4 pages by default (max-height: 164px)
-- Requires scrolling for Page 5 and Page 6
-
-**PageItem** - Individual page row
-- Displays page label and checkbox
-- Maintains consistent styling with HeaderSection
-- Independent animation state per checkbox
-
-**DividerLine** - Visual separator
-- 340px width with 0.7px border
-- Appears after header and pages section
-
-**DoneButton** - Action button with 3 states
-- State 1: Normal (background #FFCE22)
-- State 2: Hover/Active (background #FFD84D)
-- State 3: After Click (returns to State 1)
-
-**ErrorBoundary** - Error handling wrapper
-- Catches rendering errors
-- Displays fallback UI
-- Prevents application crashes
-
-## State Management
-
-The component uses React's built-in state management:
-
-- `pageSelections` - Array of 6 booleans for individual pages
-- `allPagesSelected` - Derived state using useMemo
-- `checkboxAnimationStates` - Map tracking animation states
-- Functional state updates prevent race conditions
-- React's state batching ensures atomic updates
-
-### Automatic "All Pages" Logic
+### Automatic Selection Logic
 
 - Selecting all 6 individual pages automatically checks "All pages"
 - Deselecting any page automatically unchecks "All pages"
 - Checking "All pages" selects all 6 individual pages
 - Unchecking "All pages" deselects all 6 individual pages
 
-## Styling Approach
+### Scrolling Behavior
 
-All components use inline styles exclusively to ensure:
-- Exact pixel measurements
-- Precise color values
-- No CSS cascade interference
-- Complete independence from external CSS
-- Resilience to CSS loading failures
+- 6 pages total (Page 1 through Page 6)
+- 4 pages visible by default
+- Pages 5 and 6 require scrolling to view
 
-### Constants
+## Design Specifications
 
-All dimensions, colors, and typography are centralized in `src/constants.ts`:
+### Dimensions
 
-```typescript
-DIMENSIONS - Component dimensions (width, height, padding, etc.)
-COLORS - Color palette (hex values)
-TYPOGRAPHY - Font properties (family, size, weight, etc.)
-```
+- Main Wrapper: 370×326px
+- Checkbox: 25×25px
+- Checkbox Icon: 17×12px
+- Done Button: 340×40px
+- Divider Line: 340px width
 
-## Error Handling
+### Colors
 
-### Font Loading Fallback
+- Main Border: #EEEEEE
+- Text Primary: #1F2128
+- Divider Border: #CDCDCD
+- Checkbox Light Blue: #5087F8
+- Checkbox Dark Blue: #2469F6
+- Button Normal: #FFCE22
+- Button Hover: #FFD84D
 
-- Primary font: Montserrat (Google Fonts)
-- Fallback chain: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif
-- Font loading detection via `useFontLoading` hook
-- Automatic fallback if Montserrat fails to load
+### Typography
 
-### CSS Loading Fallback
-
-- All components use inline styles
-- No dependency on external CSS files
-- Component remains functional if CSS fails
-- CSS loading detection utilities available
-
-### Rendering Error Handling
-
-- ErrorBoundary catches component errors
-- Displays user-friendly fallback UI
-- Logs detailed error information
-- Prevents entire app from crashing
-
-### Edge Case Handling
-
-- Rapid click protection with animation state tracking
-- Click queuing prevents concurrent state transitions
-- Independent animation state per checkbox
-- Functional state updates prevent race conditions
+- Font Family: Montserrat Regular
+- Font Weight: 400
+- Font Size: 14px
+- Line Height: 130%
 
 ## Installation
 
@@ -182,69 +107,26 @@ TYPOGRAPHY - Font properties (family, size, weight, etc.)
 npm install
 ```
 
-## Available Scripts
-
-### Development
+## Development
 
 ```bash
 npm run dev
 ```
-Starts the development server at http://localhost:5173
 
-### Build
+Starts development server at http://localhost:5173
+
+## Build
 
 ```bash
 npm run build
 ```
+
 Creates production build in `dist/` directory
 
-### Preview
+## Preview
 
 ```bash
 npm run preview
 ```
+
 Preview production build locally
-
-### Linting
-
-```bash
-npm run lint
-```
-Run ESLint to check code quality
-
-### Testing
-
-```bash
-npm test
-```
-Run tests in watch mode
-
-```bash
-npm run test:run
-```
-Run tests once (CI mode)
-
-```bash
-npm run test:ui
-```
-Run tests with UI interface
-
-## Testing
-
-The project includes comprehensive unit tests for all components:
-
-- 76 tests across 10 test files
-- Component rendering tests
-- Interaction tests (clicks, hovers)
-- State management tests
-- Dimension and styling accuracy tests
-- Error handling tests
-- Font loading tests
-
-Test utilities:
-- `hexToRgb()` - Converts hex colors to RGB for comparison
-- `normalizeColor()` - Normalizes color strings for testing
-
-## Demo
-
-You could open the demo using this link : https://page-selection-component.vercel.app/

@@ -4,26 +4,12 @@ import DividerLine from './DividerLine';
 import HeaderSection from './HeaderSection';
 import ScrollablePagesSection from './ScrollablePagesSection';
 import DoneButton from './DoneButton';
-import { useFontLoading } from '../hooks/useFontLoading';
 
 /**
  * Root component for the page selection interface
  * Manages state for all checkboxes and automatic "All pages" logic
- * 
- * State Management:
- * - pageSelections: Array of 6 booleans for individual page checkboxes
- * - allPagesSelected: Derived state - true when all 6 pages are selected
- * - checkboxAnimationStates: Map tracking animation state (1-9) for each checkbox
- * - buttonState: Done button state ('normal' | 'hover' | 'active')
- * 
- * Error Handling:
- * - Monitors font loading and uses fallback fonts if Montserrat fails
- * - Component remains fully functional with fallback fonts
  */
 const PageSelectionComponent: React.FC = () => {
-  // Monitor font loading status
-  const fontLoaded = useFontLoading();
-
   // State for individual page selections (array of 6 booleans)
   const [pageSelections, setPageSelections] = useState<boolean[]>([
     false, 
@@ -83,8 +69,6 @@ const PageSelectionComponent: React.FC = () => {
     console.log('Done button clicked');
     console.log('Selected pages:', pageSelections);
     console.log('All pages selected:', allPagesSelected);
-    console.log('Font loaded:', fontLoaded);
-    // Future implementation: handle done action
   };
 
   return (

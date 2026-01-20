@@ -9,12 +9,17 @@ interface CheckboxProps {
 }
 
 /**
- * Reusable checkbox with 9 animation states
+ * Reusable checkbox with 8 animation states
  * 
- * Error Handling:
- * - Uses inline styles exclusively for CSS loading failure resilience
- * - Maintains full interactivity (click, hover) even without external CSS
- * - All visual states are defined programmatically via inline styles
+ * States:
+ * 1. Empty/Default
+ * 2. Hover - Light
+ * 3. Pre-click
+ * 4. Transition to Checked
+ * 5. Checked/Active
+ * 6. Transition to Unchecked
+ * 7. Disappearing
+ * 8. Fading (returns to State 1)
  */
 const Checkbox: React.FC<CheckboxProps> = ({ 
   isChecked, 
@@ -114,7 +119,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         }, 150);
       }, 0);
     } else {
-      // Unchecking sequence: State 5 → 6 → 7 → 8 → 9 → 1
+      // Unchecking sequence: State 5 → 6 → 7 → 8 → 1
       isAnimatingRef.current = true;
       setCurrentState(6);
       
@@ -130,22 +135,17 @@ const Checkbox: React.FC<CheckboxProps> = ({
         animationTimeoutRef.current = setTimeout(() => {
           setCurrentState(8);
           
-          // State 8 → 9
+          // State 8 → 1 (directly back to empty)
           animationTimeoutRef.current = setTimeout(() => {
-            setCurrentState(9);
+            setCurrentState(1);
+            onChange(); // Notify parent of unchecked state
+            isAnimatingRef.current = false;
             
-            // State 9 → 1
-            animationTimeoutRef.current = setTimeout(() => {
-              setCurrentState(1);
-              onChange(); // Notify parent of unchecked state
-              isAnimatingRef.current = false;
-              
-              // Process pending click if any
-              if (pendingClickRef.current) {
-                pendingClickRef.current = false;
-                setTimeout(() => handleClick(), 0);
-              }
-            }, 0);
+            // Process pending click if any
+            if (pendingClickRef.current) {
+              pendingClickRef.current = false;
+              setTimeout(() => handleClick(), 0);
+            }
           }, 100);
         }, 100);
       }, 100);
@@ -207,13 +207,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
           backgroundColor: COLORS.checkboxBackgroundDarkBlue,
           border: `1px solid ${COLORS.checkboxBorderLight}`,
         };
-      case 8: // Fading
-        return {
-          ...baseStyle,
-          backgroundColor: COLORS.mainBackground,
-          border: `1px solid ${COLORS.dividerBorder}`,
-        };
-      case 9: // Return to Empty
+      case 8: // Fading (returns to State 1)
         return {
           ...baseStyle,
           backgroundColor: COLORS.mainBackground,
@@ -227,7 +221,6 @@ const Checkbox: React.FC<CheckboxProps> = ({
   const getIconColor = (): string => {
     switch (currentState) {
       case 1: // Empty/Default - icon not visible
-      case 9: // Return to Empty
         return 'transparent';
       case 2: // Hover - Light
       case 8: // Fading
@@ -248,7 +241,6 @@ const Checkbox: React.FC<CheckboxProps> = ({
   const getIconOpacity = (): number => {
     switch (currentState) {
       case 1: // Empty/Default - icon not visible
-      case 9: // Return to Empty
         return 0;
       case 7: // Disappearing - fading effect
         return 0.5;

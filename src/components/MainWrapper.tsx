@@ -8,6 +8,11 @@ interface MainWrapperProps {
 /**
  * Outer container providing border, shadow, and padding
  * Implements exact dimensions: 370×326px with border, border-radius, padding, and box-shadow
+ * 
+ * Error Handling:
+ * - Uses inline styles to ensure rendering works even if external CSS fails to load
+ * - All styling is self-contained and does not depend on external stylesheets
+ * - Component maintains full functionality with browser default styles as fallback
  */
 const MainWrapper: React.FC<MainWrapperProps> = ({ children }) => {
   const style: React.CSSProperties = {

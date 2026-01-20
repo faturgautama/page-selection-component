@@ -184,9 +184,10 @@ export const COLORS: ColorPalette = {
 
 /**
  * Typography constants
+ * Includes fallback to system sans-serif fonts if Montserrat fails to load
  */
 export const TYPOGRAPHY = {
-    fontFamily: "'Montserrat', sans-serif",
+    fontFamily: "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
     fontWeight: 400,
     fontSize: 14,
     lineHeight: '130%',

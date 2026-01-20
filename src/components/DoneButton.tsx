@@ -10,6 +10,11 @@ interface DoneButtonProps {
  * State 1 (Normal): background #FFCE22
  * State 2 (Hover/Active): background #FFD84D
  * State 3 (After Click): return to State 1 (background #FFCE22)
+ * 
+ * Error Handling:
+ * - Uses inline styles exclusively for CSS loading failure resilience
+ * - Maintains full functionality (click, hover) even without external CSS
+ * - All visual states are defined programmatically via inline styles
  */
 const DoneButton: React.FC<DoneButtonProps> = ({ onClick }) => {
   const [isHovered, setIsHovered] = useState(false);

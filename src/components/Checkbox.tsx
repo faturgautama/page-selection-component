@@ -10,6 +10,11 @@ interface CheckboxProps {
 
 /**
  * Reusable checkbox with 9 animation states
+ * 
+ * Error Handling:
+ * - Uses inline styles exclusively for CSS loading failure resilience
+ * - Maintains full interactivity (click, hover) even without external CSS
+ * - All visual states are defined programmatically via inline styles
  */
 const Checkbox: React.FC<CheckboxProps> = ({ 
   isChecked, 

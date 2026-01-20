@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import MainWrapper from './MainWrapper';
 import DividerLine from './DividerLine';
 import HeaderSection from './HeaderSection';
@@ -8,34 +8,66 @@ import DoneButton from './DoneButton';
 /**
  * Root component for the page selection interface
  * Manages state for all checkboxes and automatic "All pages" logic
+ * 
+ * State Management:
+ * - pageSelections: Array of 6 booleans for individual page checkboxes
+ * - allPagesSelected: Derived state - true when all 6 pages are selected
+ * - checkboxAnimationStates: Map tracking animation state (1-9) for each checkbox
+ * - buttonState: Done button state ('normal' | 'hover' | 'active')
  */
 const PageSelectionComponent: React.FC = () => {
-  const [pageSelections, setPageSelections] = useState<boolean[]>([false, false, false, false, false, false]);
-  const [allPagesSelected, setAllPagesSelected] = useState(false);
+  // State for individual page selections (array of 6 booleans)
+  const [pageSelections, setPageSelections] = useState<boolean[]>([
+    false, 
+    false, 
+    false, 
+    false, 
+    false, 
+    false
+  ]);
+
+  // State for checkbox animation states (Map<string, number>)
   const [checkboxAnimationStates] = useState<Map<string, number>>(new Map());
 
-  // Update "All pages" state when individual pages change
-  useEffect(() => {
-    const allSelected = pageSelections.every(selected => selected);
-    setAllPagesSelected(allSelected);
+  // State for button state (will be used in future tasks)
+  const [_buttonState] = useState<'normal' | 'hover' | 'active'>('normal');
+
+  // Derived state for allPagesSelected - automatically calculated from pageSelections
+  // This ensures the "All pages" checkbox state is always consistent with individual selections
+  const allPagesSelected = useMemo(() => {
+    return pageSelections.every(selected => selected);
   }, [pageSelections]);
 
+  /**
+   * Handles "All pages" checkbox change
+   * When checked: sets all 6 page checkboxes to true
+   * When unchecked: sets all 6 page checkboxes to false
+   */
   const handleAllPagesCheckboxChange = () => {
     const newState = !allPagesSelected;
-    setAllPagesSelected(newState);
     // Set all pages to the new state
     setPageSelections([newState, newState, newState, newState, newState, newState]);
   };
 
+  /**
+   * Handles individual page checkbox change
+   * Toggles the checkbox at the specified index
+   * The allPagesSelected state is automatically updated via useMemo
+   */
   const handlePageCheckboxChange = (pageIndex: number) => {
     const newSelections = [...pageSelections];
     newSelections[pageIndex] = !newSelections[pageIndex];
     setPageSelections(newSelections);
+    // Note: updateAllPagesState() is not needed as allPagesSelected is derived via useMemo
   };
 
+  /**
+   * Handles Done button click
+   */
   const handleDoneButtonClick = () => {
     console.log('Done button clicked');
     console.log('Selected pages:', pageSelections);
+    console.log('All pages selected:', allPagesSelected);
     // Future implementation: handle done action
   };
 
